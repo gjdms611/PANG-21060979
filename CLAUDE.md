@@ -24,7 +24,7 @@ npm run lint      # Oxlint 정적 분석
 - [docs/PRD.md](docs/PRD.md) — 전체 게임 개요 PRD
 - [docs/FEATURES/main.md](docs/FEATURES/main.md) — 메인 화면 구성
 - [docs/FEATURES/game_rule.md](docs/FEATURES/game_rule.md) — 게임 룰 상세
-- [docs/FEATURES/mission1.md](docs/FEATURES/mission1.md) — Mission 1 난이도 규칙
+- docs/FEATURES/mission{N}.md — Mission별 난이도 규칙
 - [docs/PLAN.md](docs/PLAN.md) — Phase 별 목표를 세운 문서
 - [docs/design/](docs/design/) — Phase별 상세 설계 문서. 파일명 규칙: `docs/design/phase{N}.md` (N = [docs/PLAN.md](docs/PLAN.md)의 Phase 번호).
 
