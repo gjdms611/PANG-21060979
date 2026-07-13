@@ -26,3 +26,12 @@ npm run lint      # Oxlint 정적 분석
 - [docs/FEATURES/game_rule.md](docs/FEATURES/game_rule.md) — 게임 룰 상세
 - [docs/FEATURES/mission1.md](docs/FEATURES/mission1.md) — Mission 1 난이도 규칙
 - [docs/PLAN.md](docs/PLAN.md) — Phase 별 목표를 세운 문서
+- [docs/design/](docs/design/) — Phase별(phase1.md ~ phase16.md) 상세 설계 문서
+
+## 작업 규칙
+
+- 사용자가 지시한 작업이 끝날 때마다 반드시 변경사항을 git commit 후 push한다.
+
+## Claude Code 플러그인
+
+- `skill-creator` 플러그인 설치됨 (2026-07-13, `/plugin`으로 설치)
