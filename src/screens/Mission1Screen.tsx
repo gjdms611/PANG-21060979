@@ -1,7 +1,9 @@
 import { useRef } from 'react'
 import { CANVAS_HEIGHT, CANVAS_WIDTH, PLAYER_WIDTH } from '../game/constants'
+import { createBalloon, type Balloon } from '../game/entities/balloon'
 import { createPlayer, updatePlayer, type Player } from '../game/entities/player'
 import { createWire, updateWire, type Wire } from '../game/entities/wire'
+import { drawBalloon } from '../game/render/drawBalloon'
 import { drawPlayer } from '../game/render/drawPlayer'
 import { drawWire } from '../game/render/drawWire'
 import { useJustPressed, useKeyboardState } from '../game/input'
@@ -11,11 +13,23 @@ import './Mission1Screen.css'
 type GameState = {
   player: Player
   wire: Wire | null
+  balloons: Balloon[]
+}
+
+function createInitialBalloons(): Balloon[] {
+  return [
+    createBalloon(CANVAS_WIDTH * 0.25, 80, 'large'),
+    createBalloon(CANVAS_WIDTH * 0.75, 80, 'large'),
+  ]
 }
 
 function Mission1Screen() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const gameStateRef = useRef<GameState>({ player: createPlayer(), wire: null })
+  const gameStateRef = useRef<GameState>({
+    player: createPlayer(),
+    wire: null,
+    balloons: createInitialBalloons(),
+  })
   const keys = useKeyboardState()
   const consumeSpace = useJustPressed(' ')
 
@@ -45,6 +59,9 @@ function Mission1Screen() {
     drawPlayer(ctx, state.player)
     if (state.wire) {
       drawWire(ctx, state.wire)
+    }
+    for (const balloon of state.balloons) {
+      drawBalloon(ctx, balloon)
     }
   })
 
