@@ -53,3 +53,17 @@ export function updateBalloon(balloon: Balloon, dt: number): void {
   updateBalloonVertical(balloon, dt)
   updateBalloonHorizontal(balloon, dt)
 }
+
+function createBalloonAt(x: number, y: number, size: BalloonSize, vx: number, vy: number): Balloon {
+  return { x, y, vx, vy, size }
+}
+
+export function splitBalloon(balloon: Balloon): Balloon[] {
+  if (balloon.size === 'small') return []
+
+  const speed = Math.abs(balloon.vx) || BALLOON_SPEED_X
+  return [
+    createBalloonAt(balloon.x, balloon.y, 'small', -speed, balloon.vy),
+    createBalloonAt(balloon.x, balloon.y, 'small', speed, balloon.vy),
+  ]
+}

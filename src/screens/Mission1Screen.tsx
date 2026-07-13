@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { CANVAS_HEIGHT, CANVAS_WIDTH, FLOOR_Y, PLAYER_WIDTH } from '../game/constants'
 import { wireHitsBalloon } from '../game/collision'
-import { createBalloon, updateBalloon, type Balloon } from '../game/entities/balloon'
+import { createBalloon, splitBalloon, updateBalloon, type Balloon } from '../game/entities/balloon'
 import { createPlayer, updatePlayer, type Player } from '../game/entities/player'
 import { createWire, updateWire, type Wire } from '../game/entities/wire'
 import { drawBalloon } from '../game/render/drawBalloon'
@@ -63,7 +63,8 @@ function Mission1Screen() {
     if (wire) {
       const hitIndex = state.balloons.findIndex((b) => wireHitsBalloon(wire, b))
       if (hitIndex !== -1) {
-        state.balloons.splice(hitIndex, 1)
+        const children = splitBalloon(state.balloons[hitIndex])
+        state.balloons.splice(hitIndex, 1, ...children)
         state.wire = null
       }
     }
