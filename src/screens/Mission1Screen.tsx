@@ -1,6 +1,6 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { CANVAS_HEIGHT, CANVAS_WIDTH, FLOOR_Y, PLAYER_WIDTH } from '../game/constants'
-import { wireHitsBalloon } from '../game/collision'
+import { playerHitsBalloon, wireHitsBalloon } from '../game/collision'
 import { createBalloon, splitBalloon, updateBalloon, type Balloon } from '../game/entities/balloon'
 import { createPlayer, updatePlayer, type Player } from '../game/entities/player'
 import { createWire, updateWire, type Wire } from '../game/entities/wire'
@@ -10,6 +10,8 @@ import { drawWire } from '../game/render/drawWire'
 import { useJustPressed, useKeyboardState } from '../game/input'
 import { useGameLoop } from '../game/loop'
 import './Mission1Screen.css'
+
+type GameStatus = 'playing' | 'dead'
 
 type GameState = {
   player: Player
@@ -33,6 +35,7 @@ function Mission1Screen() {
   })
   const keys = useKeyboardState()
   const consumeSpace = useJustPressed(' ')
+  const [status, setStatus] = useState<GameStatus>('playing')
 
   useGameLoop((dt) => {
     const canvas = canvasRef.current
@@ -42,30 +45,36 @@ function Mission1Screen() {
 
     const state = gameStateRef.current
 
-    updatePlayer(state.player, keys, dt)
+    if (status === 'playing') {
+      updatePlayer(state.player, keys, dt)
 
-    if (consumeSpace() && state.wire === null) {
-      state.wire = createWire(state.player.x + PLAYER_WIDTH / 2, FLOOR_Y)
-    }
-
-    if (state.wire) {
-      updateWire(state.wire, dt)
-      if (!state.wire.active) {
-        state.wire = null
+      if (consumeSpace() && state.wire === null) {
+        state.wire = createWire(state.player.x + PLAYER_WIDTH / 2, FLOOR_Y)
       }
-    }
 
-    for (const balloon of state.balloons) {
-      updateBalloon(balloon, dt)
-    }
+      if (state.wire) {
+        updateWire(state.wire, dt)
+        if (!state.wire.active) {
+          state.wire = null
+        }
+      }
 
-    const wire = state.wire
-    if (wire) {
-      const hitIndex = state.balloons.findIndex((b) => wireHitsBalloon(wire, b))
-      if (hitIndex !== -1) {
-        const children = splitBalloon(state.balloons[hitIndex])
-        state.balloons.splice(hitIndex, 1, ...children)
-        state.wire = null
+      for (const balloon of state.balloons) {
+        updateBalloon(balloon, dt)
+      }
+
+      const wire = state.wire
+      if (wire) {
+        const hitIndex = state.balloons.findIndex((b) => wireHitsBalloon(wire, b))
+        if (hitIndex !== -1) {
+          const children = splitBalloon(state.balloons[hitIndex])
+          state.balloons.splice(hitIndex, 1, ...children)
+          state.wire = null
+        }
+      }
+
+      if (state.balloons.some((b) => playerHitsBalloon(state.player, b))) {
+        setStatus('dead')
       }
     }
 
@@ -77,6 +86,13 @@ function Mission1Screen() {
     }
     for (const balloon of state.balloons) {
       drawBalloon(ctx, balloon)
+    }
+
+    if (status === 'dead') {
+      ctx.fillStyle = '#08060d'
+      ctx.font = 'bold 48px sans-serif'
+      ctx.textAlign = 'center'
+      ctx.fillText('사망!', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2)
     }
   })
 
