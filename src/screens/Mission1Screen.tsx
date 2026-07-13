@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { CANVAS_HEIGHT, CANVAS_WIDTH, PLAYER_WIDTH } from '../game/constants'
+import { wireHitsBalloon } from '../game/collision'
 import { createBalloon, updateBalloon, type Balloon } from '../game/entities/balloon'
 import { createPlayer, updatePlayer, type Player } from '../game/entities/player'
 import { createWire, updateWire, type Wire } from '../game/entities/wire'
@@ -54,6 +55,19 @@ function Mission1Screen() {
       }
     }
 
+    for (const balloon of state.balloons) {
+      updateBalloon(balloon, dt)
+    }
+
+    const wire = state.wire
+    if (wire) {
+      const hitIndex = state.balloons.findIndex((b) => wireHitsBalloon(wire, b))
+      if (hitIndex !== -1) {
+        state.balloons.splice(hitIndex, 1)
+        state.wire = null
+      }
+    }
+
     ctx.fillStyle = '#ffffff'
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
     drawPlayer(ctx, state.player)
@@ -61,7 +75,6 @@ function Mission1Screen() {
       drawWire(ctx, state.wire)
     }
     for (const balloon of state.balloons) {
-      updateBalloon(balloon, dt)
       drawBalloon(ctx, balloon)
     }
   })
