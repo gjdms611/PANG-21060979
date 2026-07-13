@@ -39,7 +39,11 @@ function createInitialGameState(): GameState {
   }
 }
 
-function Mission1Screen() {
+type Mission1ScreenProps = {
+  onExitToMain: () => void
+}
+
+function Mission1Screen({ onExitToMain }: Mission1ScreenProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const gameStateRef = useRef<GameState>(createInitialGameState())
   const keys = useKeyboardState()
@@ -133,8 +137,10 @@ function Mission1Screen() {
         height={CANVAS_HEIGHT}
         className="mission1-canvas"
       />
-      {status === 'clear' && <ClearScreen />}
-      {status === 'gameover' && <GameOverScreen onRestart={handleRestart} />}
+      {status === 'clear' && <ClearScreen onExitToMain={onExitToMain} />}
+      {status === 'gameover' && (
+        <GameOverScreen onRestart={handleRestart} onExitToMain={onExitToMain} />
+      )}
     </div>
   )
 }

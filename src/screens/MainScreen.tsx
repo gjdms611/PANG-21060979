@@ -7,9 +7,10 @@ import './MainScreen.css'
 
 type MainScreenProps = {
   onStart: () => void
+  onHowToPlay: () => void
 }
 
-function MainScreen({ onStart }: MainScreenProps) {
+function MainScreen({ onStart, onHowToPlay }: MainScreenProps) {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [notice, setNotice] = useState<string | null>(null)
   const [showExitConfirm, setShowExitConfirm] = useState(false)
@@ -19,7 +20,7 @@ function MainScreen({ onStart }: MainScreenProps) {
     if (item.id === 'start') {
       onStart()
     } else if (item.id === 'howToPlay') {
-      setNotice('조작 방법 화면은 준비 중입니다')
+      onHowToPlay()
     } else if (item.id === 'options') {
       setNotice('설정 화면은 준비 중입니다')
     } else if (item.id === 'exit') {

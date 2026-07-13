@@ -18,6 +18,11 @@
   margin: 0;
 }
 
+.gameover-screen-buttons {
+  display: flex;
+  gap: 1em;
+}
+
 .gameover-screen-button {
   font-size: 1.25rem;
   padding: 0.5em 1.5em;
